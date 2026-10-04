@@ -1,0 +1,161 @@
+<form class="login">
+    <h3>Login</h3>
+
+    <input type="email" id="email" placeholder="Email">
+
+    <input type="password" id="password" placeholder="Password">
+
+    <button type="button" onclick="login()">Sign In</button>
+
+    <button type="button" onclick="signup()">Sign Up</button>
+</form>
+
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+
+import {
+    getAuth,
+    signInWithEmailAndPassword,
+    createUserWithEmailAndPassword
+} from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
+
+
+const firebaseConfig = {
+    apiKey: "AIzaSyCnz09jjCirdRl2CeDqALQVo2AtTBSzf38",
+    authDomain: "login-cc705.firebaseapp.com",
+    projectId: "login-cc705",
+    storageBucket: "login-cc705.firebasestorage.app",
+    messagingSenderId: "145346179246",
+    appId: "1:145346179246:web:4c3fa4d2130281b7b97d3f"
+};
+
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+
+// LOGIN
+
+window.login = function() {
+
+    let email = document.getElementById("email").value;
+    let password = document.getElementById("password").value;
+
+    signInWithEmailAndPassword(auth, email, password)
+
+    .then((userCredential) => {
+
+        alert("Login Successful!");
+
+        window.location.href = "https://www.youtube.com";
+
+    })
+
+    .catch((error) => {
+
+        alert(error.message);
+
+    });
+
+};
+
+
+// SIGN UP
+
+window.signup = function() {
+
+    let email = document.getElementById("email").value;
+    let password = document.getElementById("password").value;
+
+    createUserWithEmailAndPassword(auth, email, password)
+
+    .then((userCredential) => {
+
+        alert("Account Created Successfully!");
+
+    })
+
+    .catch((error) => {
+
+        alert(error.message);
+
+    });
+
+};
+
+</script>
+<script>
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+
+import {
+    getAuth,
+    signInWithEmailAndPassword,
+    createUserWithEmailAndPassword
+} from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
+
+
+const firebaseConfig = {
+    apiKey: "AIzaSyCnz09jjCirdRl2CeDqALQVo2AtTBSzf38",
+    authDomain: "login-cc705.firebaseapp.com",
+    projectId: "login-cc705",
+    storageBucket: "login-cc705.firebasestorage.app",
+    messagingSenderId: "145346179246",
+    appId: "1:145346179246:web:4c3fa4d2130281b7b97d3f"
+};
+
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+
+// LOGIN
+
+window.login = function() {
+
+    let email = document.getElementById("email").value;
+    let password = document.getElementById("password").value;
+
+    signInWithEmailAndPassword(auth, email, password)
+
+    .then((userCredential) => {
+
+        alert("Login Successful!");
+
+        window.location.href = "https://www.youtube.com";
+
+    })
+
+    .catch((error) => {
+
+        alert(error.message);
+
+    });
+
+};
+
+
+// SIGN UP
+
+window.signup = function() {
+
+    let email = document.getElementById("email").value;
+    let password = document.getElementById("password").value;
+
+    createUserWithEmailAndPassword(auth, email, password)
+
+    .then((userCredential) => {
+
+        alert("Account Created Successfully!");
+
+    })
+
+    .catch((error) => {
+
+        alert(error.message);
+
+    });
+
+};
+</script>
