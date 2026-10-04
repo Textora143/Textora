@@ -1,38 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>Login</title>
+
+    <style>
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+
+            height: 100vh;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login {
+            background: white;
+
+            width: 320px;
+
+            padding: 30px;
+
+            border-radius: 15px;
+
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+
+            text-align: center;
+        }
+
+        .login h3 {
+            font-size: 28px;
+            margin-bottom: 25px;
+        }
+
+        .login input {
+            width: 100%;
+
+            box-sizing: border-box;
+
+            padding: 12px;
+
+            margin-bottom: 15px;
+
+            border: 1px solid #ccc;
+
+            border-radius: 8px;
+
+            font-size: 16px;
+        }
+
+        .login input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .login button {
+            width: 100%;
+
+            padding: 12px;
+
+            margin-top: 8px;
+
+            border: none;
+
+            border-radius: 8px;
+
+            background: #667eea;
+
+            color: white;
+
+            font-size: 16px;
+
+            cursor: pointer;
+        }
+
+        .login button:hover {
+            background: #4f63c7;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
 <form class="login">
+
     <h3>Login</h3>
 
-    <input type="email" id="email" placeholder="Email">
+    <input
+        type="email"
+        id="email"
+        placeholder="Email"
+    >
 
-    <input type="password" id="password" placeholder="Password">
+    <input
+        type="password"
+        id="password"
+        placeholder="Password"
+    >
 
-    <button type="button" onclick="login()">Sign In</button>
+    <button type="button" onclick="login()">
+        Sign In
+    </button>
 
-    <button type="button" onclick="signup()">Sign Up</button>
+    <button type="button" onclick="signup()">
+        Sign Up
+    </button>
+
 </form>
 
 
 <script type="module">
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
 
 import {
     getAuth,
     signInWithEmailAndPassword,
     createUserWithEmailAndPassword
-} from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
+}
+from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
 
 
 const firebaseConfig = {
+
     apiKey: "AIzaSyCnz09jjCirdRl2CeDqALQVo2AtTBSzf38",
+
     authDomain: "login-cc705.firebaseapp.com",
+
     projectId: "login-cc705",
+
     storageBucket: "login-cc705.firebasestorage.app",
+
     messagingSenderId: "145346179246",
+
     appId: "1:145346179246:web:4c3fa4d2130281b7b97d3f"
+
 };
 
 
 const app = initializeApp(firebaseConfig);
+
 const auth = getAuth(app);
 
 
@@ -40,16 +155,25 @@ const auth = getAuth(app);
 
 window.login = function() {
 
-    let email = document.getElementById("email").value;
-    let password = document.getElementById("password").value;
+    let email =
+        document.getElementById("email").value;
 
-    signInWithEmailAndPassword(auth, email, password)
+    let password =
+        document.getElementById("password").value;
+
+
+    signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+    )
 
     .then((userCredential) => {
 
         alert("Login Successful!");
 
-        window.location.href = "https://www.youtube.com";
+        window.location.href =
+            "https://www.youtube.com";
 
     })
 
@@ -66,10 +190,18 @@ window.login = function() {
 
 window.signup = function() {
 
-    let email = document.getElementById("email").value;
-    let password = document.getElementById("password").value;
+    let email =
+        document.getElementById("email").value;
 
-    createUserWithEmailAndPassword(auth, email, password)
+    let password =
+        document.getElementById("password").value;
+
+
+    createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+    )
 
     .then((userCredential) => {
 
@@ -86,76 +218,6 @@ window.signup = function() {
 };
 
 </script>
-<script>
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
 
-import {
-    getAuth,
-    signInWithEmailAndPassword,
-    createUserWithEmailAndPassword
-} from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
-
-
-const firebaseConfig = {
-    apiKey: "AIzaSyCnz09jjCirdRl2CeDqALQVo2AtTBSzf38",
-    authDomain: "login-cc705.firebaseapp.com",
-    projectId: "login-cc705",
-    storageBucket: "login-cc705.firebasestorage.app",
-    messagingSenderId: "145346179246",
-    appId: "1:145346179246:web:4c3fa4d2130281b7b97d3f"
-};
-
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-
-
-// LOGIN
-
-window.login = function() {
-
-    let email = document.getElementById("email").value;
-    let password = document.getElementById("password").value;
-
-    signInWithEmailAndPassword(auth, email, password)
-
-    .then((userCredential) => {
-
-        alert("Login Successful!");
-
-        window.location.href = "https://www.youtube.com";
-
-    })
-
-    .catch((error) => {
-
-        alert(error.message);
-
-    });
-
-};
-
-
-// SIGN UP
-
-window.signup = function() {
-
-    let email = document.getElementById("email").value;
-    let password = document.getElementById("password").value;
-
-    createUserWithEmailAndPassword(auth, email, password)
-
-    .then((userCredential) => {
-
-        alert("Account Created Successfully!");
-
-    })
-
-    .catch((error) => {
-
-        alert(error.message);
-
-    });
-
-};
-</script>
+</body>
+</html>
