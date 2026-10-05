@@ -1,0 +1,1712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Textora - Stylish Text & Tools</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
+:root{--bg:#f4f7fb;--card:#fff;--text:#20242c;--muted:#697386}
+body{background:var(--bg);color:var(--text);transition:.3s}
+body.dark{--bg:#0e1118;--card:#191d27;--text:#f5f7ff;--muted:#aeb6c6}
+
+header{
+ position:sticky;top:0;z-index:1000;background:var(--card);
+ box-shadow:0 4px 20px #0001;padding:12px 4%;
+ display:flex;align-items:center;justify-content:space-between;gap:10px
+}
+.logo{
+ font-size:27px;font-weight:900;
+ background:linear-gradient(90deg,#6366f1,#ec4899,#f97316);
+ -webkit-background-clip:text;color:transparent
+}
+.nav{display:flex;gap:7px}
+.btn{
+ border:0;border-radius:12px;padding:10px 14px;background:linear-gradient(135deg,#6366f1,#ec4899);
+ color:#fff;font-weight:bold;cursor:pointer;transition:.2s
+}
+.btn:hover{transform:translateY(-2px)}
+.hero{text-align:center;padding:50px 18px 30px}
+.hero h1{font-size:42px;margin-bottom:10px}
+.hero h1 span{
+ background:linear-gradient(90deg,#6366f1,#ec4899,#f97316);
+ -webkit-background-clip:text;color:transparent
+}
+.hero p{color:var(--muted)}
+.search{max-width:700px;margin:22px auto 35px}
+.search input{
+ width:100%;padding:16px 20px;border:2px solid transparent;
+ border-radius:17px;background:var(--card);color:var(--text);
+ outline:none;box-shadow:0 8px 25px #0001
+}
+.search input:focus{border-color:#8b5cf6}
+
+.grid{
+ width:92%;max-width:1200px;margin:auto;
+ display:grid;grid-template-columns:repeat(4,1fr);gap:17px;padding-bottom:50px
+}
+.card{
+ min-height:145px;border-radius:22px;padding:22px;color:#fff;
+ cursor:pointer;position:relative;overflow:hidden;
+ box-shadow:0 10px 25px #0002;transition:.3s
+}
+.card:hover{transform:translateY(-7px) scale(1.015)}
+.card:after{
+ content:"";position:absolute;width:100px;height:100px;
+ border-radius:50%;background:#fff2;right:-30px;top:-30px
+}
+.card h3,.card p{position:relative;z-index:1}
+.card h3{font-size:19px;margin-bottom:8px}
+.card p{font-size:13px;opacity:.92}
+.card:nth-child(4n+1){background:linear-gradient(135deg,#6366f1,#8b5cf6)}
+.card:nth-child(4n+2){background:linear-gradient(135deg,#ec4899,#f43f5e)}
+.card:nth-child(4n+3){background:linear-gradient(135deg,#f97316,#f59e0b)}
+.card:nth-child(4n+4){background:linear-gradient(135deg,#10b981,#06b6d4)}
+
+.page{
+ display:none;width:94%;max-width:1100px;margin:25px auto 60px;
+ animation:in .3s ease
+}
+@keyframes in{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:none}}
+.head{
+ display:flex;align-items:center;justify-content:space-between;
+ gap:10px;margin-bottom:18px
+}
+.head h2{font-size:27px}
+.back{background:#334155;color:#fff;padding:10px 16px;border-radius:12px;font-weight:bold}
+.panel{
+ background:var(--card);border-radius:22px;padding:20px;
+ box-shadow:0 10px 30px #0001;margin-bottom:18px
+}
+input,textarea,select{
+ width:100%;padding:14px;border:2px solid #e2e5eb;
+ border-radius:13px;outline:none;background:var(--card);
+ color:var(--text);margin-bottom:11px
+}
+body.dark input,body.dark textarea,body.dark select{border-color:#343a49}
+textarea{resize:vertical}
+input:focus,textarea:focus,select:focus{border-color:#8b5cf6}
+.action{
+ background:linear-gradient(135deg,#6366f1,#ec4899);
+ color:#fff;padding:11px 16px;border:0;border-radius:11px;
+ font-weight:bold;cursor:pointer;margin:3px
+}
+.tabs{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:15px}
+.tab{
+ border:0;padding:9px 14px;border-radius:20px;
+ background:#e5e7eb;color:#333;cursor:pointer
+}
+body.dark .tab{background:#303545;color:#ddd}
+.tab.active{background:linear-gradient(135deg,#6366f1,#ec4899);color:#fff}
+.output{display:grid;gap:9px}
+.item{
+ background:var(--bg);padding:13px;border-radius:13px;
+ display:flex;align-items:center;gap:10px
+}
+.itemText{flex:1;word-break:break-word}
+.copy{background:#111827;color:#fff;border:0;border-radius:9px;padding:8px 11px}
+body.dark .copy{background:#6366f1}
+.stat{
+ background:linear-gradient(135deg,#6366f1,#ec4899);
+ color:#fff;padding:16px;border-radius:13px;margin-top:10px;font-weight:bold
+}
+.calcDisplay{
+ width:100%;background:#111827!important;color:#fff!important;
+ border:0!important;text-align:right;font-size:26px
+}
+.calc{
+ display:grid;grid-template-columns:repeat(4,1fr);gap:8px
+}
+.calc button{
+ padding:15px;border:0;border-radius:11px;cursor:pointer;
+ background:#e5e7eb
+}
+body.dark .calc button{background:#303545;color:#fff}
+footer{text-align:center;padding:30px;color:var(--muted)}
+
+/* AUTH */
+.overlay{
+ display:none;position:fixed;inset:0;z-index:3000;
+ background:#000b;backdrop-filter:blur(7px);
+ align-items:center;justify-content:center;padding:18px
+}
+.auth{
+ width:100%;max-width:420px;background:var(--card);color:var(--text);
+ border-radius:24px;padding:25px;position:relative;
+ box-shadow:0 25px 70px #0005;animation:auth .3s
+}
+@keyframes auth{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:none}}
+.close{
+ position:absolute;right:12px;top:10px;width:35px;height:35px;
+ border:0;border-radius:50%;font-size:22px;cursor:pointer
+}
+.authIcon{text-align:center;font-size:43px}
+.auth h2{text-align:center;margin:5px 0}
+.authSub{text-align:center;color:var(--muted);font-size:14px;margin-bottom:17px}
+.authTabs{display:grid;grid-template-columns:1fr 1fr;background:var(--bg);padding:5px;border-radius:12px;margin-bottom:16px}
+.authTab{border:0;background:transparent;color:var(--text);padding:10px;border-radius:9px;font-weight:bold}
+.authTab.active{background:linear-gradient(135deg,#6366f1,#ec4899);color:#fff}
+.authField{margin-bottom:10px}
+.authField label{display:block;font-size:13px;font-weight:bold;margin-bottom:5px}
+.authField input{margin:0}
+.authSubmit{width:100%;padding:13px;border:0;border-radius:12px;background:linear-gradient(135deg,#6366f1,#ec4899);color:#fff;font-weight:bold}
+.forgot{display:block;margin:12px auto 0;border:0;background:none;color:#8b5cf6;font-weight:bold;cursor:pointer}
+.msg{text-align:center;min-height:20px;margin-top:10px;font-size:13px;font-weight:bold}
+.profile{text-align:center;display:none}
+.avatar{
+ width:70px;height:70px;border-radius:50%;margin:8px auto 12px;
+ display:flex;align-items:center;justify-content:center;
+ background:linear-gradient(135deg,#6366f1,#ec4899);color:#fff;font-size:29px;font-weight:bold
+}
+.profileEmail{color:var(--muted);word-break:break-word;margin:8px 0 20px}
+.logout{width:100%;padding:13px;border:0;border-radius:12px;background:linear-gradient(135deg,#ef4444,#f97316);color:#fff;font-weight:bold}
+.hidden{display:none!important}
+
+@media(max-width:900px){.grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:650px){
+ header{padding:10px 3%}.logo{font-size:23px}
+ .nav .btn{padding:8px 10px;font-size:12px}
+ .hero{padding-top:35px}.hero h1{font-size:32px}
+ .grid{grid-template-columns:repeat(2,1fr);gap:11px}
+ .card{min-height:130px;padding:16px}.card h3{font-size:16px}
+ .card p{font-size:12px}.head h2{font-size:21px}
+ .panel{padding:15px}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<div class="logo">✨ Textora</div>
+<div class="nav">
+<button class="btn" id="homeBtn">🏠 Home</button>
+<button class="btn" id="loginBtn">👤 Login</button>
+<button class="btn" id="themeBtn">🌙</button>
+</div>
+</header>
+
+<!-- HOME -->
+<section id="home">
+
+<div class="hero">
+<h1>Welcome to <span>Textora</span></h1>
+<p>Stylish Text • Names • Status • Bios • Captions • Tools</p>
+
+<div class="search">
+<input id="search" placeholder="🔎 Search Textora tools...">
+</div>
+</div>
+
+<div class="grid" id="grid">
+
+<div class="card" data-page="stylishText"><h3>✨ Stylish Text</h3><p>100+ stylish text designs</p></div>
+<div class="card" data-page="stylishName"><h3>👑 Stylish Name</h3><p>Stylish names & usernames</p></div>
+<div class="card" data-page="status"><h3>💬 WhatsApp Status</h3><p>Love, Sad, Attitude & more</p></div>
+<div class="card" data-page="bio"><h3>📝 Bio Generator</h3><p>Cool social bios</p></div>
+<div class="card" data-page="caption"><h3>📸 Caption Generator</h3><p>Instagram captions</p></div>
+<div class="card" data-page="symbols"><h3>🔣 Symbols & Emojis</h3><p>200+ symbols & emojis</p></div>
+<div class="card" data-page="calculator"><h3>🧮 Calculator</h3><p>Basic calculator</p></div>
+<div class="card" data-page="percentage"><h3>📊 Percentage</h3><p>Percentage calculator</p></div>
+<div class="card" data-page="discount"><h3>🏷️ Discount</h3><p>Discount calculator</p></div>
+<div class="card" data-page="bmi"><h3>⚖️ BMI Calculator</h3><p>Calculate BMI</p></div>
+<div class="card" data-page="age"><h3>🎂 Age Calculator</h3><p>Calculate age</p></div>
+<div class="card" data-page="zakat"><h3>🌙 Zakat Calculator</h3><p>Calculate Zakat</p></div>
+<div class="card" data-page="words"><h3>🔢 Word Counter</h3><p>Words & characters</p></div>
+<div class="card" data-page="password"><h3>🔐 Password Generator</h3><p>Strong passwords</p></div>
+<div class="card" data-page="case"><h3>🔤 Text Case</h3><p>Upper/lower/title case</p></div>
+<div class="card" data-page="random"><h3>🎲 Random Number</h3><p>Random number generator</p></div>
+<div class="card" data-page="reverse"><h3>↩️ Reverse Text</h3><p>Reverse text</p></div>
+<div class="card" data-page="spaces"><h3>🧹 Remove Spaces</h3><p>Clean text spaces</p></div>
+<div class="card" data-page="repeat"><h3>🔁 Text Repeater</h3><p>Repeat text</p></div>
+<div class="card" data-page="binary"><h3>💻 Binary Converter</h3><p>Text ↔ Binary</p></div>
+
+</div>
+</section>
+
+<!-- STYLISH TEXT -->
+<section class="page" id="stylishText">
+<div class="head"><h2>✨ Stylish Text</h2><button class="back">← Home</button></div>
+<div class="panel">
+<textarea id="styleInput" rows="4" placeholder="Type your text..."></textarea>
+<button class="action" id="styleGenerate">✨ Generate</button>
+<button class="action" id="styleClear">🗑️ Clear</button>
+<div class="output" id="styleOutput"></div>
+</div>
+</section>
+
+<!-- NAME -->
+<section class="page" id="stylishName">
+<div class="head"><h2>👑 Stylish Name</h2><button class="back">← Home</button></div>
+<div class="panel">
+<input id="nameInput" placeholder="Enter your name...">
+<button class="action" id="nameGenerate">✨ Generate</button>
+<div class="output" id="nameOutput"></div>
+</div>
+</section>
+
+<!-- STATUS -->
+<section class="page" id="status">
+<div class="head"><h2>💬 WhatsApp Status</h2><button class="back">← Home</button></div>
+<div class="panel">
+<div class="tabs" id="statusTabs"></div>
+<div class="output" id="statusOutput"></div>
+</div>
+</section>
+
+<!-- BIO -->
+<section class="page" id="bio">
+<div class="head"><h2>📝 Bio Generator</h2><button class="back">← Home</button></div>
+<div class="panel">
+<div class="tabs" id="bioTabs"></div>
+<div class="output" id="bioOutput"></div>
+</div>
+</section>
+
+<!-- CAPTION -->
+<section class="page" id="caption">
+<div class="head"><h2>📸 Caption Generator</h2><button class="back">← Home</button></div>
+<div class="panel">
+<div class="tabs" id="captionTabs"></div>
+<div class="output" id="captionOutput"></div>
+</div>
+</section>
+
+<!-- SYMBOLS -->
+<section class="page" id="symbols">
+<div class="head"><h2>🔣 Symbols & Emojis</h2><button class="back">← Home</button></div>
+<div class="panel">
+<div class="tabs" id="symbolTabs"></div>
+<div class="output" id="symbolOutput"></div>
+</div>
+</section>
+
+<!-- CALCULATOR -->
+<section class="page" id="calculator">
+<div class="head"><h2>🧮 Calculator</h2><button class="back">← Home</button></div>
+<div class="panel">
+<input class="calcDisplay" id="calcDisplay" readonly>
+<div class="calc">
+<button data-calc="clear">C</button><button data-calc="back">⌫</button>
+<button data-calc="%">%</button><button data-calc="/">÷</button>
+<button data-calc="7">7</button><button data-calc="8">8</button><button data-calc="9">9</button><button data-calc="*">×</button>
+<button data-calc="4">4</button><button data-calc="5">5</button><button data-calc="6">6</button><button data-calc="-">−</button>
+<button data-calc="1">1</button><button data-calc="2">2</button><button data-calc="3">3</button><button data-calc="+">+</button>
+<button data-calc="0">0</button><button data-calc=".">.</button><button data-calc="=" style="grid-column:span 2">=</button>
+</div>
+</div>
+</section>
+
+<!-- PERCENTAGE -->
+<section class="page" id="percentage">
+<div class="head"><h2>📊 Percentage</h2><button class="back">← Home</button></div>
+<div class="panel">
+<input id="pA" type="number" placeholder="Number">
+<input id="pB" type="number" placeholder="Percentage">
+<button class="action" id="pBtn">Calculate</button>
+<div class="stat" id="pResult">Result will appear here</div>
+</div>
+</section>
+
+<!-- DISCOUNT -->
+<section class="page" id="discount">
+<div class="head"><h2>🏷️ Discount</h2><button class="back">← Home</button></div>
+<div class="panel">
+<input id="dPrice" type="number" placeholder="Original price">
+<input id="dPercent" type="number" placeholder="Discount %">
+<button class="action" id="dBtn">Calculate</button>
+<div class="stat" id="dResult">Result will appear here</div>
+</div>
+</section>
+
+<!-- BMI -->
+<section class="page" id="bmi">
+<div class="head"><h2>⚖️ BMI Calculator</h2><button class="back">← Home</button></div>
+<div class="panel">
+<input id="bWeight" type="number" placeholder="Weight (kg)">
+<input id="bHeight" type="number" placeholder="Height (cm)">
+<button class="action" id="bBtn">Calculate BMI</button>
+<div class="stat" id="bResult">Result will appear here</div>
+</div>
+</section>
+
+<!-- AGE -->
+<section class="page" id="age">
+<div class="head"><h2>🎂 Age Calculator</h2><button class="back">← Home</button></div>
+<div class="panel">
+<input id="birth" type="date">
+<button class="action" id="ageBtn">Calculate Age</button>
+<div class="stat" id="ageResult">Result will appear here</div>
+</div>
+</section>
+
+
+<!-- ZAKAT -->
+<section class="page" id="zakat">
+
+<div class="head">
+<h2>🌙 Zakat Calculator</h2>
+<button class="back">← Home</button>
+</div>
+
+<div class="panel">
+
+<input id="zCash" type="number" min="0"
+placeholder="Cash & Bank Balance">
+
+<input id="zGold" type="number" min="0"
+placeholder="Gold Value">
+
+<input id="zSilver" type="number" min="0"
+placeholder="Silver Value">
+
+<input id="zInvest" type="number" min="0"
+placeholder="Investments / Shares">
+
+<input id="zBusiness" type="number" min="0"
+placeholder="Business Assets">
+
+<input id="zReceivable" type="number" min="0"
+placeholder="Money Receivable">
+
+<input id="zDebt" type="number" min="0"
+placeholder="Debts / Liabilities">
+
+<button class="action" id="zBtn">
+Calculate Zakat
+</button>
+
+<button class="action" id="zClear">
+Clear
+</button>
+
+<div class="stat" id="zResult">
+Result will appear here
+</div>
+
+</div>
+
+</section>
+<!-- WORDS -->
+<section class="page" id="words">
+<div class="head"><h2>🔢 Word Counter</h2><button class="back">← Home</button></div>
+<div class="panel">
+<textarea id="wordInput" rows="7" placeholder="Type or paste text..."></textarea>
+<div class="stat" id="wordResult">Words: 0 | Characters: 0 | Without spaces: 0</div>
+</div>
+</section>
+
+<!-- PASSWORD -->
+<section class="page" id="password">
+<div class="head"><h2>🔐 Password Generator</h2><button class="back">← Home</button></div>
+<div class="panel">
+<input id="passLength" type="number" value="16" min="4" max="100">
+<button class="action" id="passBtn">🔐 Generate Password</button>
+<div class="item"><div class="itemText" id="passOutput">---</div><button class="copy" id="passCopy">Copy</button></div>
+</div>
+</section>
+
+<!-- CASE -->
+<section class="page" id="case">
+<div class="head"><h2>🔤 Text Case</h2><button class="back">← Home</button></div>
+<div class="panel">
+<textarea id="caseInput" rows="6" placeholder="Enter text..."></textarea>
+<button class="action" data-case="upper">UPPERCASE</button>
+<button class="action" data-case="lower">lowercase</button>
+<button class="action" data-case="title">Title Case</button>
+<button class="action" data-case="sentence">Sentence case</button>
+<textarea id="caseOutput" rows="6" readonly placeholder="Result..."></textarea>
+</div>
+</section>
+
+<!-- RANDOM -->
+<section class="page" id="random">
+<div class="head"><h2>🎲 Random Number</h2><button class="back">← Home</button></div>
+<div class="panel">
+<input id="rMin" type="number" placeholder="Minimum">
+<input id="rMax" type="number" placeholder="Maximum">
+<button class="action" id="rBtn">Generate</button>
+<div class="stat" id="rResult">---</div>
+</div>
+</section>
+
+<!-- REVERSE -->
+<section class="page" id="reverse">
+<div class="head"><h2>↩️ Reverse Text</h2><button class="back">← Home</button></div>
+<div class="panel">
+<textarea id="revInput" rows="5" placeholder="Enter text..."></textarea>
+<button class="action" id="revBtn">Reverse</button>
+<textarea id="revOutput" rows="5" readonly></textarea>
+</div>
+</section>
+
+<!-- SPACES -->
+<section class="page" id="spaces">
+<div class="head"><h2>🧹 Remove Spaces</h2><button class="back">← Home</button></div>
+<div class="panel">
+<textarea id="spaceInput" rows="5" placeholder="Enter text..."></textarea>
+<button class="action" id="spaceBtn">Remove Spaces</button>
+<textarea id="spaceOutput" rows="5" readonly></textarea>
+</div>
+</section>
+
+<!-- REPEAT -->
+<section class="page" id="repeat">
+<div class="head"><h2>🔁 Text Repeater</h2><button class="back">← Home</button></div>
+<div class="panel">
+<textarea id="repeatInput" rows="4" placeholder="Enter text..."></textarea>
+<input id="repeatCount" type="number" value="5" min="1" max="1000">
+<button class="action" id="repeatBtn">Repeat</button>
+<textarea id="repeatOutput" rows="8" readonly></textarea>
+</div>
+</section>
+
+<!-- BINARY -->
+<section class="page" id="binary">
+<div class="head"><h2>💻 Binary Converter</h2><button class="back">← Home</button></div>
+<div class="panel">
+<textarea id="binInput" rows="5" placeholder="Enter text or binary..."></textarea>
+<button class="action" id="toBin">Text → Binary</button>
+<button class="action" id="fromBin">Binary → Text</button>
+<textarea id="binOutput" rows="7" readonly></textarea>
+</div>
+</section>
+
+<footer>
+✨ Textora — Stylish Text & Tools Hub<br>
+<span>© 2026 Textora</span>
+</footer>
+
+<!-- AUTH MODAL -->
+<div class="overlay" id="overlay">
+<div class="auth">
+
+<button class="close" id="closeAuth">×</button>
+
+<div id="authForm">
+
+<div class="authIcon">🔐</div>
+<h2 id="authTitle">Welcome Back</h2>
+<p class="authSub" id="authSub">Login to your Textora account</p>
+
+<div class="authTabs">
+<button class="authTab active" id="loginTab">Login</button>
+<button class="authTab" id="signupTab">Sign Up</button>
+</div>
+
+<div class="authField hidden" id="nameWrap">
+<label>Name</label>
+<input id="authName" type="text" placeholder="Your name">
+</div>
+
+<div class="authField">
+<label>Email</label>
+<input id="authEmail" type="email" placeholder="you@example.com">
+</div>
+
+<div class="authField">
+<label>Password</label>
+<input id="authPassword" type="password" placeholder="Password">
+</div>
+
+<div class="authField hidden" id="confirmWrap">
+<label>Confirm Password</label>
+<input id="authConfirm" type="password" placeholder="Confirm password">
+</div>
+
+<button class="authSubmit" id="authSubmit">Login</button>
+<button class="forgot" id="forgot">Forgot Password?</button>
+
+<div class="msg" id="authMsg"></div>
+
+</div>
+
+<div class="profile" id="profile">
+<div class="avatar" id="avatar">T</div>
+<h2 id="profileName">Textora User</h2>
+<p class="profileEmail" id="profileEmail"></p>
+<button class="logout" id="logout">🚪 Logout</button>
+</div>
+
+</div>
+</div>
+
+
+<!-- EVERYTHING INCLUDING FIREBASE IS IN THIS ONE MODULE -->
+<script type="module">
+
+/* ================= FIREBASE ================= */
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+
+import {
+ getAuth,
+ createUserWithEmailAndPassword,
+ signInWithEmailAndPassword,
+ sendPasswordResetEmail,
+ signOut,
+ onAuthStateChanged,
+ updateProfile
+}
+from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+
+const firebaseConfig={
+ apiKey:"AIzaSyDckPpGE3fVrjKHNlSQpC9wpKou3jH8v1U",
+ authDomain:"textora-8af2b.firebaseapp.com",
+ projectId:"textora-8af2b",
+ storageBucket:"textora-8af2b.firebasestorage.app",
+ messagingSenderId:"528912014789",
+ appId:"1:528912014789:web:475c00585f827d88263fac"
+};
+
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+
+
+/* ================= HELPERS ================= */
+
+const $=id=>document.getElementById(id);
+
+function toast(message){
+
+ let t=$("toast");
+
+ if(!t){
+  t=document.createElement("div");
+  t.id="toast";
+  t.style.cssText=
+  "position:fixed;left:50%;bottom:25px;transform:translateX(-50%) translateY(20px);background:#111827;color:white;padding:12px 18px;border-radius:13px;z-index:5000;opacity:0;transition:.3s;font-weight:bold;box-shadow:0 10px 30px #0004";
+  document.body.appendChild(t);
+ }
+
+ t.textContent=message;
+ t.style.opacity="1";
+ t.style.transform="translateX(-50%) translateY(0)";
+
+ clearTimeout(window.toastTimer);
+
+ window.toastTimer=setTimeout(()=>{
+  t.style.opacity="0";
+  t.style.transform="translateX(-50%) translateY(20px)";
+ },1700);
+}
+
+function copyText(text){
+
+ if(!text)return;
+
+ navigator.clipboard.writeText(text)
+ .then(()=>toast("Copied! ✅"))
+ .catch(()=>{
+  const x=document.createElement("textarea");
+  x.value=text;
+  document.body.appendChild(x);
+  x.select();
+  document.execCommand("copy");
+  x.remove();
+  toast("Copied! ✅");
+ });
+}
+
+function addResult(output,text){
+
+ const row=document.createElement("div");
+ row.className="item";
+
+ const span=document.createElement("div");
+ span.className="itemText";
+ span.textContent=text;
+
+ const button=document.createElement("button");
+ button.className="copy";
+ button.textContent="Copy";
+
+ button.onclick=()=>copyText(text);
+
+ row.append(span,button);
+ output.appendChild(row);
+}
+
+
+/* ================= NAVIGATION ================= */
+
+const pages=document.querySelectorAll(".page");
+
+function home(){
+
+ pages.forEach(p=>p.style.display="none");
+ $("home").style.display="block";
+
+ window.scrollTo({
+  top:0,
+  behavior:"smooth"
+ });
+}
+
+function openPage(id){
+
+ $("home").style.display="none";
+
+ pages.forEach(p=>p.style.display="none");
+
+ const page=$(id);
+
+ if(page){
+  page.style.display="block";
+  window.scrollTo({top:0,behavior:"smooth"});
+ }
+}
+
+document.querySelectorAll(".card").forEach(card=>{
+ card.addEventListener("click",()=>{
+  openPage(card.dataset.page);
+ });
+});
+
+document.querySelectorAll(".back").forEach(btn=>{
+ btn.addEventListener("click",home);
+});
+
+$("homeBtn").onclick=home;
+
+
+/* ================= SEARCH ================= */
+
+$("search").addEventListener("input",function(){
+
+ const q=this.value.toLowerCase().trim();
+
+ document.querySelectorAll(".card").forEach(card=>{
+  card.style.display=
+   card.textContent.toLowerCase().includes(q)?"":"none";
+ });
+});
+
+
+/* ================= THEME ================= */
+
+if(localStorage.getItem("textoraTheme")==="dark"){
+ document.body.classList.add("dark");
+ $("themeBtn").textContent="☀️";
+}
+
+$("themeBtn").onclick=()=>{
+
+ document.body.classList.toggle("dark");
+
+ const dark=document.body.classList.contains("dark");
+
+ localStorage.setItem(
+  "textoraTheme",
+  dark?"dark":"light"
+ );
+
+ $("themeBtn").textContent=dark?"☀️":"🌙";
+};
+
+
+/* ================= STYLES ================= */
+
+const styles=[
+
+"𝓣𝓮𝔁𝓽: {x}","𝕋𝕖𝕩𝕥: {x}","𝐓𝐞𝐱𝐭: {x}","𝑻𝒆𝒙𝒕: {x}",
+"𝙏𝙚𝙭𝙩: {x}","𝚃𝚎𝚡𝚝: {x}","𝗧𝗲𝘅𝘁: {x}","𝘛𝘦𝘹𝘵: {x}",
+"Ｔｅｘｔ: {x}","『{x}』","【{x}】","〖{x}〗","〘{x}〙",
+"〚{x}〛","〔{x}〕","《{x}》","〈{x}〉","꧁{x}꧂","༺{x}༻",
+"★彡 {x} 彡★","✦ {x} ✦","✧ {x} ✧","★ {x} ★","☆ {x} ☆",
+"♡ {x} ♡","♥ {x} ♥","ღ {x} ღ","❥ {x} ❥","ツ {x} ツ",
+"亗 {x} 亗","乂 {x} 乂","メ {x} メ","〆 {x} 〆","シ {x} シ",
+"⚡ {x} ⚡","🔥 {x} 🔥","💫 {x} 💫","✨ {x} ✨","🌙 {x} 🌙",
+"☠ {x} ☠","♛ {x} ♛","♕ {x} ♕","👑 {x} 👑","⚔ {x} ⚔",
+"☯ {x} ☯","🌸 {x} 🌸","❀ {x} ❀","✿ {x} ✿","➳ {x} ➳",
+"➤ {x} ➤","➺ {x} ➺","➻ {x} ➻","➼ {x} ➼","➽ {x} ➽",
+"➸ {x} ➸","⟦ {x} ⟧","⟪ {x} ⟫","⟬ {x} ⟭","⦃ {x} ⦄",
+"⧼ {x} ⧽","░ {x} ░","▒ {x} ▒","▓ {x} ▓","█ {x} █",
+"• {x} •","● {x} ●","○ {x} ○","◉ {x} ◉","◎ {x} ◎",
+"◈ {x} ◈","◇ {x} ◇","◆ {x} ◆","△ {x} △","▲ {x} ▲",
+"▽ {x} ▽","▼ {x} ▼","◁ {x} ▷","◀ {x} ▶","→ {x} ←",
+"↪ {x} ↩","↠ {x} ↞","⇢ {x} ⇠","⇨ {x} ⇦","☞ {x} ☜",
+"☛ {x} ☚","❮ {x} ❯","❰ {x} ❱","⫷ {x} ⫸","⌁ {x} ⌁",
+"≈ {x} ≈","≋ {x} ≋","※ {x} ※","⁂ {x} ⁂","✪ {x} ✪",
+"✰ {x} ✰","✵ {x} ✵","✶ {x} ✶","✷ {x} ✷","✸ {x} ✸",
+"✹ {x} ✹","✺ {x} ✺","✻ {x} ✻","✼ {x} ✼","✽ {x} ✽",
+"✾ {x} ✾","❂ {x} ❂","❈ {x} ❈","❉ {x} ❉","❊ {x} ❊",
+"❋ {x} ❋","☘ {x} ☘","❦ {x} ❦","ღ♡ {x} ♡ღ","★♡ {x} ♡★",
+"🔥★ {x} ★🔥","👑★ {x} ★👑","⚡★ {x} ★⚡"
+];
+
+
+/* ================= STYLISH TEXT ================= */
+
+$("styleGenerate").onclick=()=>{
+
+ const text=$("styleInput").value;
+ const out=$("styleOutput");
+
+ out.innerHTML="";
+
+ if(!text.trim()){
+  toast("Enter text first.");
+  return;
+ }
+
+ styles.forEach(s=>{
+  addResult(out,s.replace("{x}",text));
+ });
+
+ toast(styles.length+" styles generated ✨");
+};
+
+$("styleClear").onclick=()=>{
+ $("styleInput").value="";
+ $("styleOutput").innerHTML="";
+};
+
+
+/* ================= NAME ================= */
+
+$("nameGenerate").onclick=()=>{
+
+ const text=$("nameInput").value;
+ const out=$("nameOutput");
+
+ out.innerHTML="";
+
+ if(!text.trim()){
+  toast("Enter your name first.");
+  return;
+ }
+
+ styles.forEach(s=>{
+  addResult(out,s.replace("{x}",text));
+ });
+};
+
+
+/* ================= DATA ================= */
+
+const statuses={
+All:[
+"Life is beautiful when you choose to smile. 😊",
+"Stay real, stay humble, stay strong. ✨",
+"Make today count.",
+"Good vibes only.",
+"Create your own happiness.",
+"Enjoy every little moment.",
+"Peace over everything.",
+"Be yourself.",
+"Dream big. Work hard.",
+"Less drama, more peace.",
+"Smile because life is short.",
+"Keep moving forward.",
+"Believe in yourself.",
+"Everything happens for a reason.",
+"Enjoy the journey.",
+"Make your own story.",
+"Stay positive.",
+"Live. Laugh. Love.",
+"Choose happiness.",
+"Be the energy you want to attract."
+],
+Love:[
+"Love makes ordinary moments extraordinary. ❤️",
+"You are my favorite notification. ❤️",
+"Home is wherever you are.",
+"Forever sounds good with you.",
+"You make my heart smile.",
+"With you, every day feels special.",
+"My heart chose you.",
+"Love is you and me.",
+"You are my happy place.",
+"Two hearts, one story.",
+"Love grows where trust lives.",
+"Together is my favorite place.",
+"You're the reason I smile.",
+"Love is a beautiful journey.",
+"My favorite person is you."
+],
+Sad:[
+"Sometimes silence says everything. 💔",
+"Not every smile means happiness.",
+"Some memories never leave.",
+"People change and feelings fade.",
+"Behind every smile there is a story.",
+"Sometimes letting go is the only way.",
+"Heart tired, soul quiet.",
+"Missing someone hurts silently.",
+"Some goodbyes are never easy.",
+"Pain changes people.",
+"Memories can be heavy.",
+"Silence can be painful.",
+"Some feelings have no words.",
+"Not all wounds are visible.",
+"Sometimes we just need time."
+],
+Attitude:[
+"My attitude depends on your behavior. 😎",
+"I know my worth.",
+"Born to stand out.",
+"Don't study me, you won't graduate.",
+"Silent but dangerous.",
+"I don't compete, I dominate.",
+"Respect is earned.",
+"Keep watching.",
+"Confidence is my style.",
+"Be yourself. I already am.",
+"Different level.",
+"My vibe is not for everyone.",
+"I don't chase, I attract.",
+"Stay classy.",
+"Watch me grow."
+],
+Motivation:[
+"Believe you can and you're halfway there. 💪",
+"Never give up.",
+"Small steps every day.",
+"Work hard in silence.",
+"Your future needs you.",
+"Dream. Believe. Achieve.",
+"Discipline beats motivation.",
+"Keep going.",
+"Success starts with courage.",
+"Make yourself proud.",
+"Progress over perfection.",
+"Your time is now.",
+"Turn dreams into plans.",
+"Be stronger than your excuses.",
+"One day at a time."
+],
+Funny:[
+"Life is short. Smile while you still have teeth. 😂",
+"I need a six-month vacation twice a year.",
+"Too lazy to be stressed.",
+"Reality called, so I hung up.",
+"I am on energy-saving mode.",
+"Common sense is not so common.",
+"My phone understands me better.",
+"Sleep is my cardio.",
+"I followed my heart to the fridge.",
+"Professional overthinker.",
+"Monday needs a restart button.",
+"Coffee first, questions later.",
+"My life needs subtitles.",
+"I came. I saw. I forgot.",
+"Error 404: Motivation not found."
+],
+Islamic:[
+"Allah is always near. 🤍",
+"Trust Allah's plan.",
+"Alhamdulillah for everything.",
+"With hardship comes ease.",
+"Keep your heart connected to Allah.",
+"Allah knows what is best for you.",
+"Make dua and keep patience.",
+"Never lose hope in Allah's mercy.",
+"Sabr and Shukr.",
+"Allah is enough for me.",
+"Put your trust in Allah.",
+"Every blessing deserves Alhamdulillah.",
+"Have patience and make dua.",
+"Allah sees what your heart hides.",
+"Keep faith."
+]
+};
+
+const bios={
+Cool:[
+"Living life my way 😎","Creating memories, not excuses ✨",
+"Simple person with big dreams.","Good vibes, good life.",
+"Born to be different.","Dreamer | Believer | Achiever",
+"Enjoying the journey.","Peace is my priority.",
+"Smile. Live. Repeat.","Making my own story.",
+"Just being me.","Collecting moments.","Positive mind, positive life."
+],
+Attitude:[
+"Silent but unforgettable.","Confidence is my accessory.",
+"I know who I am.","Not perfect, just original.",
+"Different by choice.","My life, my rules.",
+"Don't copy, create.","Too focused to care.",
+"Respect me and I respect you.","Watch me grow.",
+"Born original.","No competition.","My energy speaks."
+],
+Love:[
+"Taken by the best ❤️","Love makes life beautiful.",
+"Heart full of love.","Forever starts with you.",
+"Love is my favorite language.","Crazy in love.",
+"You + Me = ❤️","Love, laugh, live.",
+"Made of love.","Heart belongs to someone special.",
+"Love is home.","Two hearts, one soul."
+],
+Motivation:[
+"Building the life I dream about.","Progress over perfection.",
+"One day at a time.","Focused on becoming better.",
+"Dream big. Start small.","Success is a journey.",
+"Never stop learning.","Be stronger than your excuses.",
+"Keep pushing.","Future under construction.",
+"Work. Learn. Grow.","Making it happen."
+]
+};
+
+const captions={
+Love:[
+"Love looks good on us. ❤️","Forever kind of feeling.","Just us.",
+"Made for each other.","Love in every moment.",
+"My favorite place is beside you.","Two hearts, one story.",
+"Feeling lucky in love.","Love and laughter.","You make life sweeter."
+],
+Attitude:[
+"Too focused to be distracted. 😎","Watch me, not my competition.",
+"Different level.","Confidence speaks louder.","I don't chase, I attract.",
+"Own your story.","Stay classy.","Born to stand out.",
+"Keep your opinions.","My energy is expensive."
+],
+Motivation:[
+"Work until your dreams become reality.","Make it happen.",
+"Focus. Believe. Achieve.","Your time is now.",
+"Don't stop until you're proud.","Success is built daily.",
+"Keep going.","One step closer.","Turn dreams into plans.",
+"Be unstoppable."
+],
+Funny:[
+"Current mood: pretending to be productive. 😂","Life needs more snacks.",
+"Too cool for Monday.","I came, I saw, I forgot why.",
+"Just here for the food.","My plans? Cancelled.",
+"Running on coffee.","Smile, it's free.","Weekend loading...",
+"Do I look serious?"
+],
+Travel:[
+"Collect moments, not things. ✈️","Adventure is calling.",
+"Travel more, worry less.","Lost somewhere beautiful.",
+"New place, new memories.","Passport full, heart full.",
+"Exploring the world.","Take only memories.",
+"Life is a journey.","Find your next adventure."
+],
+Instagram:[
+"Just another beautiful day.","Making memories.",
+"Living my best life.","Current chapter: happiness.",
+"Main character energy.","Good moments.",
+"Picture says it all.","Vibes speak louder.",
+"Stay golden.","Simply me."
+],
+Friendship:[
+"Friends make life better. 🤝","Good friends are priceless.",
+"Partners in crime.","Crazy together.","Memories made with friends.",
+"Friends who laugh together stay together.","Better together.",
+"Real friends, real memories.","Friendship never goes out of style.",
+"My people."
+]
+};
+
+const symbols={
+Hearts:["♡","♥","❤","💕","💖","💗","💓","💞","💘","💝","❥","ღ","۵","ლ","❣","💟","🖤","🤍","💙","💜"],
+Stars:["★","☆","✦","✧","✪","✰","✯","✵","✶","✷","✸","✹","✺","✻","✼","✽","✾","❂","❈","❉"],
+Arrows:["→","←","↑","↓","↔","↕","➜","➤","➳","➵","➸","➺","➻","➼","➽","⟶","⟵","⇢","⇠","↪"],
+Decorations:["꧁꧂","༺༻","『』","【】","〖〗","〘〙","〚〛","《》","〈〉","〔〕","⟦⟧","⟪⟫","⟬⟭","⦃⦄","❮❯","❰❱","⫷⫸","★彡彡★","✦✧✦","•●•"],
+Emojis:["😀","😂","🤣","😊","😍","🥰","😘","😎","🤩","🥳","😇","🤗","😜","🤪","😴","🤔","😏","😢","😭","😡","🔥","✨","💫","🌙","⭐","🌸","🌹","🍀","👑","💎"]
+};
+
+
+/* ================= TABS ================= */
+
+function makeTabs(tabId,data,outId){
+
+ const box=$(tabId);
+ const keys=Object.keys(data);
+
+ keys.forEach((key,i)=>{
+
+  const b=document.createElement("button");
+  b.className="tab"+(i===0?" active":"");
+  b.textContent=key;
+
+  b.onclick=()=>{
+
+   box.querySelectorAll(".tab")
+   .forEach(x=>x.classList.remove("active"));
+
+   b.classList.add("active");
+
+   render(data[key],$(outId));
+  };
+
+  box.appendChild(b);
+ });
+
+ render(data[keys[0]],$(outId));
+}
+
+function render(arr,out){
+
+ out.innerHTML="";
+
+ arr.forEach(x=>addResult(out,x));
+}
+
+makeTabs("statusTabs",statuses,"statusOutput");
+makeTabs("bioTabs",bios,"bioOutput");
+makeTabs("captionTabs",captions,"captionOutput");
+makeTabs("symbolTabs",symbols,"symbolOutput");
+
+
+/* ================= CALCULATOR ================= */
+
+let calc="";
+
+document.querySelectorAll("[data-calc]").forEach(button=>{
+
+ button.onclick=()=>{
+
+  const v=button.dataset.calc;
+
+  if(v==="clear"){
+   calc="";
+  }
+  else if(v==="back"){
+   calc=calc.slice(0,-1);
+  }
+  else if(v==="="){
+
+   try{
+
+    if(!/^[0-9+\-*/%.() ]+$/.test(calc))
+     throw Error();
+
+    const result=Function(
+     '"use strict";return ('+calc+')'
+    )();
+
+    if(!Number.isFinite(result))
+     throw Error();
+
+    calc=String(result);
+
+   }catch{
+    calc="";
+    $("calcDisplay").value="Error";
+    return;
+   }
+
+  }else{
+   calc+=v;
+  }
+
+  $("calcDisplay").value=calc;
+ };
+});
+
+
+/* ================= PERCENTAGE ================= */
+
+$("pBtn").onclick=()=>{
+
+ const a=parseFloat($("pA").value);
+ const b=parseFloat($("pB").value);
+
+ if(isNaN(a)||isNaN(b)){
+  $("pResult").textContent="Enter both values.";
+  return;
+ }
+
+ $("pResult").textContent=
+ b+"% of "+a+" = "+(a*b/100);
+};
+
+
+/* ================= DISCOUNT ================= */
+
+$("dBtn").onclick=()=>{
+
+ const price=parseFloat($("dPrice").value);
+ const percent=parseFloat($("dPercent").value);
+
+ if(isNaN(price)||isNaN(percent)){
+  $("dResult").textContent="Enter both values.";
+  return;
+ }
+
+ const saving=price*percent/100;
+ const final=price-saving;
+
+ $("dResult").textContent=
+ "Discount: "+saving.toFixed(2)+
+ " | Final Price: "+final.toFixed(2);
+};
+
+
+/* ================= BMI ================= */
+
+$("bBtn").onclick=()=>{
+
+ const weight=parseFloat($("bWeight").value);
+ const height=parseFloat($("bHeight").value);
+
+ if(isNaN(weight)||isNaN(height)||height<=0){
+  $("bResult").textContent="Enter valid values.";
+  return;
+ }
+
+ const bmi=weight/((height/100)**2);
+
+ let category;
+
+ if(bmi<18.5)category="Underweight";
+ else if(bmi<25)category="Normal";
+ else if(bmi<30)category="Overweight";
+ else category="Obese";
+
+ $("bResult").textContent=
+ "BMI: "+bmi.toFixed(2)+" — "+category;
+};
+
+
+/* ================= AGE ================= */
+
+$("ageBtn").onclick=()=>{
+
+ if(!$("birth").value){
+  $("ageResult").textContent="Select birth date.";
+  return;
+ }
+
+ const birth=new Date($("birth").value+"T00:00:00");
+ const now=new Date();
+
+ if(birth>now){
+  $("ageResult").textContent="Invalid birth date.";
+  return;
+ }
+
+ let y=now.getFullYear()-birth.getFullYear();
+ let m=now.getMonth()-birth.getMonth();
+ let d=now.getDate()-birth.getDate();
+
+ if(d<0){
+  m--;
+  d+=new Date(now.getFullYear(),now.getMonth(),0).getDate();
+ }
+
+ if(m<0){
+  y--;
+  m+=12;
+ }
+
+ $("ageResult").textContent=
+ "Age: "+y+" years, "+m+" months, "+d+" days";
+};
+
+
+/* ================= ZAKAT ================= */
+
+function zValue(id){
+
+ const value=parseFloat($(id).value);
+
+ return isNaN(value)||value<0 ? 0 : value;
+}
+
+$("zBtn").onclick=()=>{
+
+ const cash=zValue("zCash");
+ const gold=zValue("zGold");
+ const silver=zValue("zSilver");
+ const invest=zValue("zInvest");
+ const business=zValue("zBusiness");
+ const receivable=zValue("zReceivable");
+ const debt=zValue("zDebt");
+
+ const totalAssets=
+   cash+
+   gold+
+   silver+
+   invest+
+   business+
+   receivable;
+
+ const netWealth=
+   Math.max(0,totalAssets-debt);
+
+ const zakat=
+   netWealth*0.025;
+
+ if(totalAssets===0){
+
+   $("zResult").textContent=
+   "Enter your zakatable assets.";
+
+   return;
+ }
+
+ $("zResult").innerHTML=
+   "Total Assets: "+
+   totalAssets.toLocaleString(undefined,{
+     minimumFractionDigits:2,
+     maximumFractionDigits:2
+   })+
+
+   "<br>Less Debts: "+
+   debt.toLocaleString(undefined,{
+     minimumFractionDigits:2,
+     maximumFractionDigits:2
+   })+
+
+   "<br>Net Zakatable Wealth: "+
+   netWealth.toLocaleString(undefined,{
+     minimumFractionDigits:2,
+     maximumFractionDigits:2
+   })+
+
+   "<br><br>🌙 Zakat @ 2.5%: "+
+   zakat.toLocaleString(undefined,{
+     minimumFractionDigits:2,
+     maximumFractionDigits:2
+   });
+};
+
+
+$("zClear").onclick=()=>{
+
+ [
+  "zCash",
+  "zGold",
+  "zSilver",
+  "zInvest",
+  "zBusiness",
+  "zReceivable",
+  "zDebt"
+ ].forEach(id=>{
+   $(id).value="";
+ });
+
+ $("zResult").textContent=
+ "Result will appear here";
+
+};
+
+
+/* ================= WORD COUNTER ================= */
+
+$("wordInput").addEventListener("input",function(){
+
+ const text=this.value;
+
+ const words=text.trim()
+ ?text.trim().split(/\s+/).length:0;
+
+ $("wordResult").textContent=
+ "Words: "+words+
+ " | Characters: "+text.length+
+ " | Without spaces: "+text.replace(/\s/g,"").length;
+});
+
+
+/* ================= PASSWORD ================= */
+
+$("passBtn").onclick=()=>{
+
+ let len=parseInt($("passLength").value)||16;
+
+ len=Math.max(4,Math.min(100,len));
+
+ const chars=
+ "ABCDEFGHIJKLMNOPQRSTUVWXYZ"+
+ "abcdefghijklmnopqrstuvwxyz"+
+ "0123456789!@#$%^&*()_+-=[]{}<>?";
+
+ let result="";
+
+ const random=new Uint32Array(len);
+ crypto.getRandomValues(random);
+
+ for(let i=0;i<len;i++)
+  result+=chars[random[i]%chars.length];
+
+ $("passOutput").textContent=result;
+};
+
+$("passCopy").onclick=()=>{
+ copyText($("passOutput").textContent);
+};
+
+
+/* ================= CASE ================= */
+
+document.querySelectorAll("[data-case]").forEach(button=>{
+
+ button.onclick=()=>{
+
+  const text=$("caseInput").value;
+  const type=button.dataset.case;
+  let result="";
+
+  if(type==="upper")
+   result=text.toUpperCase();
+
+  if(type==="lower")
+   result=text.toLowerCase();
+
+  if(type==="title")
+   result=text.toLowerCase()
+   .replace(/\b\w/g,x=>x.toUpperCase());
+
+  if(type==="sentence")
+   result=text.toLowerCase()
+   .replace(/(^\s*\w|[.!?]\s*\w)/g,x=>x.toUpperCase());
+
+  $("caseOutput").value=result;
+ };
+});
+
+
+/* ================= RANDOM ================= */
+
+$("rBtn").onclick=()=>{
+
+ let min=parseInt($("rMin").value);
+ let max=parseInt($("rMax").value);
+
+ if(isNaN(min)||isNaN(max)){
+  $("rResult").textContent="Enter minimum and maximum.";
+  return;
+ }
+
+ if(min>max)[min,max]=[max,min];
+
+ const n=Math.floor(Math.random()*(max-min+1))+min;
+
+ $("rResult").textContent="Random Number: "+n;
+};
+
+
+/* ================= REVERSE ================= */
+
+$("revBtn").onclick=()=>{
+ $("revOutput").value=
+ Array.from($("revInput").value).reverse().join("");
+};
+
+
+/* ================= SPACES ================= */
+
+$("spaceBtn").onclick=()=>{
+ $("spaceOutput").value=
+ $("spaceInput").value.replace(/\s+/g,"");
+};
+
+
+/* ================= REPEAT ================= */
+
+$("repeatBtn").onclick=()=>{
+
+ const text=$("repeatInput").value;
+ let count=parseInt($("repeatCount").value)||1;
+
+ count=Math.max(1,Math.min(1000,count));
+
+ $("repeatOutput").value=
+ text?Array(count).fill(text).join("\n"):"";
+};
+
+
+/* ================= BINARY ================= */
+
+$("toBin").onclick=()=>{
+
+ $("binOutput").value=
+ Array.from($("binInput").value)
+ .map(c=>c.charCodeAt(0).toString(2).padStart(8,"0"))
+ .join(" ");
+};
+
+$("fromBin").onclick=()=>{
+
+ const input=$("binInput").value.trim();
+
+ try{
+
+  if(!input){
+   $("binOutput").value="";
+   return;
+  }
+
+  $("binOutput").value=
+  input.split(/\s+/).map(b=>{
+
+   if(!/^[01]+$/.test(b))throw Error();
+
+   return String.fromCharCode(parseInt(b,2));
+
+  }).join("");
+
+ }catch{
+  $("binOutput").value="Invalid binary format.";
+ }
+};
+
+
+/* ================= AUTH ================= */
+
+const overlay=$("overlay");
+const authForm=$("authForm");
+const profile=$("profile");
+
+let mode="login";
+let user=null;
+
+function authMessage(text,good=false){
+
+ $("authMsg").textContent=text;
+ $("authMsg").style.color=
+ good?"#16a34a":"#ef4444";
+}
+
+function setMode(newMode){
+
+ mode=newMode;
+ authMessage("");
+
+ if(mode==="login"){
+
+  $("loginTab").classList.add("active");
+  $("signupTab").classList.remove("active");
+
+  $("authTitle").textContent="Welcome Back";
+  $("authSub").textContent="Login to your Textora account";
+  $("authSubmit").textContent="Login";
+
+  $("nameWrap").classList.add("hidden");
+  $("confirmWrap").classList.add("hidden");
+
+  $("forgot").style.display="block";
+
+ }else{
+
+  $("signupTab").classList.add("active");
+  $("loginTab").classList.remove("active");
+
+  $("authTitle").textContent="Create Account";
+  $("authSub").textContent="Join Textora";
+  $("authSubmit").textContent="Create Account";
+
+  $("nameWrap").classList.remove("hidden");
+  $("confirmWrap").classList.remove("hidden");
+
+  $("forgot").style.display="none";
+ }
+}
+
+function openAuth(){
+
+ overlay.style.display="flex";
+
+ if(user){
+
+  authForm.style.display="none";
+  profile.style.display="block";
+
+ }else{
+
+  authForm.style.display="block";
+  profile.style.display="none";
+
+  setMode("login");
+ }
+}
+
+$("loginBtn").onclick=openAuth;
+
+$("closeAuth").onclick=()=>{
+ overlay.style.display="none";
+};
+
+overlay.onclick=e=>{
+ if(e.target===overlay)
+  overlay.style.display="none";
+};
+
+$("loginTab").onclick=()=>setMode("login");
+$("signupTab").onclick=()=>setMode("signup");
+
+
+$("authSubmit").onclick=async()=>{
+
+ const email=$("authEmail").value.trim();
+ const password=$("authPassword").value;
+
+ if(!email||!password){
+  authMessage("Enter email and password.");
+  return;
+ }
+
+ try{
+
+  $("authSubmit").disabled=true;
+
+  if(mode==="signup"){
+
+   const name=$("authName").value.trim();
+   const confirm=$("authConfirm").value;
+
+   if(!name){
+    authMessage("Enter your name.");
+    $("authSubmit").disabled=false;
+    return;
+   }
+
+   if(password.length<6){
+    authMessage("Password must be at least 6 characters.");
+    $("authSubmit").disabled=false;
+    return;
+   }
+
+   if(password!==confirm){
+    authMessage("Passwords do not match.");
+    $("authSubmit").disabled=false;
+    return;
+   }
+
+   $("authSubmit").textContent="Creating...";
+
+   const result=
+   await createUserWithEmailAndPassword(
+    auth,email,password
+   );
+
+   await updateProfile(result.user,{
+    displayName:name
+   });
+
+   authMessage("Account created successfully! 🎉",true);
+
+   $("authName").value="";
+   $("authEmail").value="";
+   $("authPassword").value="";
+   $("authConfirm").value="";
+
+  }else{
+
+   $("authSubmit").textContent="Logging in...";
+
+   await signInWithEmailAndPassword(
+    auth,email,password
+   );
+
+   authMessage("Login successful! 🎉",true);
+
+   setTimeout(()=>{
+    overlay.style.display="none";
+   },700);
+  }
+
+ }catch(error){
+
+  const messages={
+   "auth/email-already-in-use":"Email is already registered.",
+   "auth/invalid-email":"Invalid email address.",
+   "auth/weak-password":"Password is too weak.",
+   "auth/user-not-found":"Account not found.",
+   "auth/wrong-password":"Incorrect password.",
+   "auth/invalid-credential":"Incorrect email or password.",
+   "auth/too-many-requests":"Too many attempts. Try later.",
+   "auth/network-request-failed":"Check your internet connection."
+  };
+
+  authMessage(
+   messages[error.code]||"Something went wrong."
+  );
+
+ }finally{
+
+  $("authSubmit").disabled=false;
+  $("authSubmit").textContent=
+   mode==="login"?"Login":"Create Account";
+ }
+};
+
+
+/* ================= PASSWORD RESET ================= */
+
+$("forgot").onclick=async()=>{
+
+ const email=$("authEmail").value.trim();
+
+ if(!email){
+  authMessage("Enter your email first.");
+  return;
+ }
+
+ try{
+
+  await sendPasswordResetEmail(auth,email);
+
+  authMessage(
+   "Password reset email sent! 📩",
+   true
+  );
+
+ }catch(error){
+
+  const msg={
+   "auth/user-not-found":"No account found with this email.",
+   "auth/invalid-email":"Invalid email address."
+  };
+
+  authMessage(
+   msg[error.code]||"Could not send reset email."
+  );
+ }
+};
+
+
+/* ================= AUTH STATE ================= */
+
+onAuthStateChanged(auth,current=>{
+
+ user=current;
+
+ if(user){
+
+  const name=
+   user.displayName||
+   user.email.split("@")[0];
+
+  $("loginBtn").textContent="👤 "+name;
+
+  $("profileName").textContent=name;
+  $("profileEmail").textContent=user.email;
+  $("avatar").textContent=name.charAt(0).toUpperCase();
+
+ }else{
+
+  $("loginBtn").textContent="👤 Login";
+ }
+});
+
+
+/* ================= LOGOUT ================= */
+
+$("logout").onclick=async()=>{
+
+ try{
+
+  await signOut(auth);
+
+  toast("Logged out 👋");
+
+  overlay.style.display="none";
+
+ }catch{
+  toast("Logout failed.");
+ }
+};
+
+
+/* ================= INITIAL HOME ================= */
+
+home();
+
+</script>
+
+</body>
+</html>
